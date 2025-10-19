@@ -1,68 +1,44 @@
-.data
-	myName:   .asciiz "Kunwar Arpit Singh\n\n"
-	term_msg: .asciiz "The 8th term is: "
-   	sum_msg:  .asciiz "\nThe sum of the first 6 terms is: "
-    	newline:  .asciiz "\n"
+# Assignment 1: Sequential Construct-I
+# Programmed By : Kunwar Arpit Singh
 
 .text
 .globl main
 
 main:
-	li $v0, 4
-	la $a0, myName
-	syscall
-
 	# $t0 = a
 	li $t0, 1
 	
 	# $t1 = d
 	li $t1, 10
 	
-	# $t2 = n
-	li $t2, 8
+	# Calculate the 8th term
+	# Formula: an = a + (n-1)d
+	li $t2, 8             # n = 8
+	addi $t3, $t2, -1     # Calculate (n-1)
+	mul $t4, $t3, $t1     # Calculate (n-1) * d
+	add $s0, $t0, $t4     # Result: a + (n-1)d. Stored in $s0
 
-	# Calculate the 8th term (n=8)
+	# Calculate the sum of the first 6 terms
+	# Formula: Sn = (n/2) * (2a + (n-1)d)
+	li $t2, 6             # n = 6
 
-	addi $t3, $t2, -1
+	# Calculate (n-1)d part
+	addi $t3, $t2, -1     # Calculate (n-1)
+	mul $t4, $t3, $t1     # Calculate (n-1) * d
 
-	mul $t4, $t3, $t1
+	# Calculate 2a part
+	li $t8, 2             # Load immediate value 2 into a register
+	mul $t5, $t0, $t8     # Correctly use mul with registers: 2 * a
 
-	add $s0, $t0, $t4
-
-	# Calculate the sum of the first 6 terms (n=6)
-
-	li $t2, 6
-
-	addi $t3, $t2, -1
-
-	mul $t4, $t3, $t1
-
-	mul $t5, $t0, 2
-
+	# Calculate (2a + (n-1)d)
 	add $t6, $t5, $t4
 
-	li   $t8, 2
-	div  $t2, $t8
+	# Calculate n/2 part
+	div  $t2, $t8         # n / 2. Quotient is stored in special register 'lo'
+	mflo $t7              # Move the quotient (n/2) from 'lo' into $t7
 
-	mflo $t7
-
-	mul $s1, $t7, $t6
-
-	li $v0, 4
-	la $a0, term_msg
-	syscall
-
-	li $v0, 1
-    	move $a0, $s0
-    	syscall
-
-	li $v0, 4
-    	la $a0, sum_msg
-    	syscall
-
-	li $v0, 1
-    	move $a0, $s1
-    	syscall
+	# Final sum calculation
+	mul $s1, $t7, $t6     # (n/2) * (2a + (n-1)d). Result stored in $s1
 
 	li $v0, 10
-    	syscall
+	syscall
