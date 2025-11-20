@@ -14,7 +14,7 @@ main:
 	# Calculate the 4th term
 	# Formula: an = a * r^(n-1)
 	# For n=4, this is a * r^3
-	mul $t3, $t1, $t1     # $t3 = r^2
+	mul $t2, $t1, $t1     # $t3 = r^2
 	mul $t3, $t3, $t1     # $t3 = r^3
 	mul $s2, $t0, $t3     # Result: a * r^3. Stored in $s2
 
